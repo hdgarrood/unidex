@@ -44,11 +44,12 @@ function toResultRow(codepoint) {
    name_cell.appendChild(name_cell_text)
    
    var char_cell = document.createElement('td')
-   var char_cell_text = document.createTextNode("&#" + codepoint.hex + ";")
+   var char_cell_text = document.createTextNode(
+                            String.fromCharCode(parseInt(codepoint.hex, 16)))
    char_cell.appendChild(char_cell_text)
 
    var hexcode_cell = document.createElement('td')
-   var hexcode_cell_text = document.createTextNode(codepoint.hex)
+   var hexcode_cell_text = document.createTextNode("U+" + codepoint.hex)
    hexcode_cell.appendChild(hexcode_cell_text)
 
    row.appendChild(name_cell)
