@@ -4,15 +4,15 @@
 
     // **** DATA STRUCTURE ****
     // Creates a new trie.
-    function make_trie() {
-        function insert_to_obj(obj, key, value) {
+    Unidex.make_trie = make_trie = function make_trie() {
+        function obj_insert(obj, key, value) {
             insert(obj, key.split(""), value)
         }
 
         function insert(obj, keyarr, value) {
             var key = keyarr[0]
             if (keyarr.length === 1) {
-                obj[key] = { 'end': true, 'value': value }
+                obj[key] = { 'value': value }
             } else {
                 if (obj[key] == null)
                     obj[key] = {}
@@ -20,8 +20,16 @@
             }
         }
 
-        function retrieve_from_obj(obj, key) {
+        function obj_retrieve(obj, key) {
             return retrieve(obj, key.split(""))
+        }
+
+        function hasValue(obj) {
+            return obj.value != undefined
+        }
+
+        function isLeaf(obj) {
+            return _.keys(obj).length === 1
         }
 
         function retrieve(obj, keyarr) {
@@ -29,7 +37,7 @@
                 return null;
 
             if (keyarr.length === 0) {
-                if (obj.end === true)
+                if (isLeaf(obj))
                     return obj.value;
                 else
                     return null;
@@ -39,13 +47,28 @@
             }
         }
 
+        function obj_size(obj) {
+            var total = 0
+            _.keys(obj).forEach(function(key) {
+                if (hasValue(obj[key]))
+                    total += 1
+
+                total += obj_size(obj[key])
+            })
+            return total
+        }
+
         return {
             insert: function(key, value) {
-                insert_to_obj(this.data, key, value)
+                obj_insert(this.data, key, value)
             },
 
             retrieve: function(key) {
-                return retrieve_from_obj(this.data, key)
+                return obj_retrieve(this.data, key)
+            },
+
+            size: function() {
+                return obj_size(this.data)
             },
 
             data: { },
