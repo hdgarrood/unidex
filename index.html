@@ -16,20 +16,19 @@
 
         <script src="js/vendor/underscore.js"></script>
         <script src="js/vendor/string_fromcodepoint_polyfill.js"></script>
-        <script src="js/trie.js"></script>
-        <script src="js/parse_data.js"></script>
+        <script src="js/Unidex.js"></script>
 
         <script type="text/javascript">
-            window.Unidex = {}
-            // fetch the data and start
             var req = new XMLHttpRequest()
 
             req.overrideMimeType('text/plain')
-            req.onload = function() { parse_data(this.responseText) }
+            req.onload = function() { Unidex.init(this.responseText) }
             req.open('GET', 'data/ExtractedData.csv')
             req.send()
-        </script>
 
-        <script src="js/ui.js"></script>
+            Unidex.attach(
+                    document.getElementById('input'),
+                    document.getElementById('results'))
+        </script>
     </body>
 </html>
