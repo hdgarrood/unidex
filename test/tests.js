@@ -17,11 +17,20 @@ test('trie counting', function() {
     strictEqual(trie.size(), 3, 'trie reports correct size')
 })
 
-test('no trie clobbering', function() {
+test('no trie clobbering forwards', function() {
     var trie = make_trie()
     trie.insert('lol', 62)
     trie.insert('lols', 63)
 
     strictEqual(trie.retrieve('lol'), 62, 'retrieves correct value')
     strictEqual(trie.retrieve('lols'), 63, 'retrieves correct value')
+})
+
+test('no trie clobbering backwards', function() {
+    var trie = make_trie()
+    trie.insert('lols', 63)
+    trie.insert('lol', 62)
+
+    strictEqual(trie.retrieve('lols'), 63, 'retrieves correct value')
+    strictEqual(trie.retrieve('lol'), 62, 'retrieves correct value')
 })

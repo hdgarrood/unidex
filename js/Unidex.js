@@ -10,12 +10,11 @@
         }
 
         function insert(obj, keyarr, value) {
-            var key = keyarr[0]
-            if (keyarr.length === 1) {
-                obj[key] = { 'value': value }
+            if (keyarr.length === 0) {
+                obj.value = value
             } else {
-                if (obj[key] == null)
-                    obj[key] = {}
+                var key = keyarr[0]
+                if (obj[key] == null) obj[key] = {}
                 insert(obj[key], keyarr.slice(1), value)
             }
         }
