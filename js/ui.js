@@ -16,3 +16,25 @@ window.Unidex.query = function query(words) {
 
     return _.uniq(best_results.concat(other_results))
 }
+
+
+var resultsElem = document.getElementById('results')
+function displayResults(results) {
+    removeAllChildNodes(resultsElem);
+    var rows = _.map(results, toResultRow)
+    rows.forEach(function(row) { resultsElem.innerHtml += row })
+}
+
+function removeAllChildNodes(elem) {
+    while (elem.hasChildNodes())
+        elem.removeChild(elem.lastChild)
+}
+
+function toResultRow(codepoint) {
+
+}
+
+var inputElem = document.getElementById('input')
+inputElem.addEventListener('keyup', function(e) {
+
+})
