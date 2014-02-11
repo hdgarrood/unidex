@@ -45,7 +45,7 @@ function toResultRow(codepoint) {
    
    var char_cell = document.createElement('td')
    var char_cell_text = document.createTextNode(
-                            String.fromCharCode(parseInt(codepoint.hex, 16)))
+                            String.fromCodePoint(parseInt(codepoint.hex, 16)))
    char_cell.appendChild(char_cell_text)
 
    var hexcode_cell = document.createElement('td')
