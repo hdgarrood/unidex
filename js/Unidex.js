@@ -85,12 +85,9 @@
         string_data.split("\n").forEach(function(line) {
             if (line === "") return;
 
-            var arr = line.split(","),
-                codepoint_hex = arr[0],
-                codepoint_name = arr[1],
-                // this goes into the trie.
-                codepoint = [codepoint_name, codepoint_hex],
-                words = codepoint_name.split(" ")
+            var codepoint = line.split(","),
+                codepointObj = toCodepoint(arr),
+                words = codepointObj.name.split(" ")
 
             words.forEach(function(word) {
                 var existing = trie.retrieve(word)
@@ -113,10 +110,14 @@
         return _.union.apply(this, arr)
     }
 
+    function toCodepoint(arr) {
+        return { name: arr[0], hexcode: arr[1] }
+    }
+
     // Take a list of words, return a list of possible matches. Best first.
     Unidex.query = function query(words) {
         var result_sets = _.map(words, function(word) {
-                return Unidex.trie.retrieve(word.toUpperCase())
+                return toCodepoint(Unidex.trie.retrieve(word.toUpperCase()))
             }),
             best_results = intersection(result_sets)
 
@@ -125,6 +126,24 @@
         } else {
             return union(result_sets)
         }
+    }
+
+    // **** RESULT RANKING ****
+    // Each ranking mechanism is an object of two attributes:
+    //   weight: How good this mechanism is for determining a good result.
+    //           Higher is better.
+    //   call: A function : (Codepoint, QueryWordList) -> [0,1]
+    var ranking_mechanisms = {
+        proportion_of_matched_words: {
+            weight: 5,
+            call: function(codepoint, words) {
+            }
+        }
+    }
+
+    // Given one codepoint from a query, give it a score for how well it
+    // matches the query. Used to determine order of results.
+    function rank(codepoint, query) {
     }
 
     // **** UI ****

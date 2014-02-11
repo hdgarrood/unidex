@@ -34,3 +34,9 @@ test('no trie clobbering backwards', function() {
     strictEqual(trie.retrieve('lols'), 63, 'retrieves correct value')
     strictEqual(trie.retrieve('lol'), 62, 'retrieves correct value')
 })
+
+test('querying', function() {
+    var results = Unidex.query(['cat', 'face'])
+
+    strictEqual(results[0].hexcode, '1F431', 'first result should be cat face')
+})
