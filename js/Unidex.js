@@ -90,7 +90,7 @@
                 codepoint_hex = arr[0],
                 codepoint_name = arr[1],
                 // this goes into the trie.
-                codepoint = { name: codepoint_name, hex: codepoint_hex },
+                codepoint = [codepoint_name, codepoint_hex],
                 words = codepoint_name.split(" ")
 
             words.forEach(function(word) {
@@ -149,19 +149,22 @@
         if (codepoint == null)
             return null;
 
+       var char_name = codepoint[0],
+           char_hex  = codepoint[1]
+
        var row = document.createElement('tr')
 
        var name_cell = document.createElement('td')
-       var name_cell_text = document.createTextNode(codepoint.name)
+       var name_cell_text = document.createTextNode(char_name)
        name_cell.appendChild(name_cell_text)
 
        var char_cell = document.createElement('td')
        var char_cell_text = document.createTextNode(
-                                String.fromCodePoint(parseInt(codepoint.hex, 16)))
+                                String.fromCodePoint(parseInt(char_hex, 16)))
        char_cell.appendChild(char_cell_text)
 
        var hexcode_cell = document.createElement('td')
-       var hexcode_cell_text = document.createTextNode("U+" + codepoint.hex)
+       var hexcode_cell_text = document.createTextNode("U+" + char_hex)
        hexcode_cell.appendChild(hexcode_cell_text)
 
        row.appendChild(name_cell)
