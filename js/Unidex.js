@@ -37,7 +37,7 @@
                 return null;
 
             if (keyarr.length === 0) {
-                if (isLeaf(obj))
+                if (hasValue(obj))
                     return obj.value;
                 else
                     return null;
