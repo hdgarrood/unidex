@@ -55,4 +55,18 @@ Unidex.init(test_data, function() {
 
         ok(row instanceof HTMLTableRowElement, 'should return a <tr> element')
     })
+
+    test('displaying results', function() {
+        var resultsElem = document.createElement('table')
+        resultsElem.id = 'results'
+        var results = [ { name: 'cat face', hexcode: '1F431' }
+                      , { name: 'dizzy face', hexcode: '1F635' }
+                      ]
+
+        displayResults(resultsElem, results)
+        var immediateChildren = resultsElem.getElementsByTagName('tr')
+
+        strictEqual(immediateChildren.length, results.length,
+            'should have one result row for each result')
+    })
 })

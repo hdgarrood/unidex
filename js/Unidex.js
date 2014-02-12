@@ -196,7 +196,8 @@
 
     // Change a codepoint object into a HTMLTableRow element containing
     // information about it.
-    Unidex.internal.toResultRow = function toResultRow(codepoint) {
+    Unidex.internal.toResultRow = toResultRow =
+    function toResultRow(codepoint) {
         if (!existy(codepoint))
             return null;
 
