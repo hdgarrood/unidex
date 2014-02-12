@@ -48,4 +48,11 @@ Unidex.init(test_data, function() {
         ok(results.length >= 1, 'should have at least one result')
         strictEqual(results[0].hexcode, '1F431', 'first result should be cat face')
     })
+
+    test('creating result rows', function() {
+        var catFace = Unidex.query(['cat', 'face'])[0]
+        var row = Unidex.internal.toResultRow(catFace)
+
+        ok(row instanceof HTMLTableRowElement, 'should return a <tr> element')
+    })
 })

@@ -1,5 +1,6 @@
 (function(global) {
     var Unidex = {}
+    Unidex.internal = {}
     global.Unidex = Unidex
 
     function existy(x) {
@@ -12,7 +13,7 @@
 
     // **** DATA STRUCTURE ****
     // Creates a new trie.
-    Unidex.make_trie = make_trie = function make_trie() {
+    Unidex.internal.make_trie = make_trie = function make_trie() {
         function setValue(obj, value) {
             obj['_$'] = value
         }
@@ -97,7 +98,7 @@
     // initialistation.
     Unidex.init = function init(string_data, callback) {
         var trie = make_trie()
-        Unidex.trie = trie
+        Unidex.internal.trie = trie
 
         string_data.split("\n").forEach(function(line) {
             if (line === "") return;
@@ -146,7 +147,8 @@
     // Take a list of words, return a list of possible matches. Best first.
     Unidex.query = function query(words) {
         var result_sets = _.map(words, function(word) {
-                return _.map(Unidex.trie.retrieve(word.toUpperCase()) || [],
+                return _.map(
+                    Unidex.internal.trie.retrieve(word.toUpperCase()) || [],
                     toCodepoint)
             }),
             best_results = intersection(result_sets)
@@ -193,26 +195,24 @@
 
     // Change a codepoint object into a HTMLTableRow element containing
     // information about it.
-    function toResultRow(codepoint) {
+    Unidex.internal.toResultRow = function toResultRow(codepoint) {
         if (!existy(codepoint))
             return null;
-
-       var char_name = codepoint[0],
-           char_hex  = codepoint[1]
 
        var row = document.createElement('tr')
 
        var name_cell = document.createElement('td')
-       var name_cell_text = document.createTextNode(char_name)
+       var name_cell_text = document.createTextNode(codepoint.name)
        name_cell.appendChild(name_cell_text)
 
        var char_cell = document.createElement('td')
        var char_cell_text = document.createTextNode(
-                                String.fromCodePoint(parseInt(char_hex, 16)))
+            String.fromCodePoint(parseInt(codepoint.hexcode, 16)))
        char_cell.appendChild(char_cell_text)
 
        var hexcode_cell = document.createElement('td')
-       var hexcode_cell_text = document.createTextNode("U+" + char_hex)
+       var hexcode_cell_text = document.createTextNode(
+            "U+" + codepoint.hexcode)
        hexcode_cell.appendChild(hexcode_cell_text)
 
        row.appendChild(name_cell)
