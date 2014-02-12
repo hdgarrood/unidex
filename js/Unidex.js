@@ -2,19 +2,43 @@
     var Unidex = {}
     global.Unidex = Unidex
 
+    function existy(x) {
+        return x != null
+    }
+
+    function truthy(x) {
+        return existy(x) && x
+    }
+
     // **** DATA STRUCTURE ****
     // Creates a new trie.
     Unidex.make_trie = make_trie = function make_trie() {
+        function setValue(obj, value) {
+            obj['_$'] = value
+        }
+
+        function getValue(obj) {
+            return obj['_$']
+        }
+
+        function hasValue(obj) {
+            return existy(getValue(obj))
+        }
+
+        function isLeaf(obj) {
+            return _.keys(obj).length === 1
+        }
+
         function obj_insert(obj, key, value) {
             insert(obj, key.split(""), value)
         }
 
         function insert(obj, keyarr, value) {
             if (keyarr.length === 0) {
-                obj.value = value
+                setValue(obj, value)
             } else {
                 var key = keyarr[0]
-                if (obj[key] == null) obj[key] = {}
+                if (!existy(obj[key])) obj[key] = {}
                 insert(obj[key], keyarr.slice(1), value)
             }
         }
@@ -23,21 +47,13 @@
             return retrieve(obj, key.split(""))
         }
 
-        function hasValue(obj) {
-            return obj.value != undefined
-        }
-
-        function isLeaf(obj) {
-            return _.keys(obj).length === 1
-        }
-
         function retrieve(obj, keyarr) {
-            if (obj == undefined)
+            if (!existy(obj))
                 return null;
 
             if (keyarr.length === 0) {
                 if (hasValue(obj))
-                    return obj.value;
+                    return getValue(obj)
                 else
                     return null;
             } else {
@@ -90,12 +106,12 @@
                 words = codepointObj.name.split(" ")
 
             words.forEach(function(word) {
-                var existing = trie.retrieve(word)
+                var result = trie.retrieve(word)
 
-                if (existing == undefined) {
-                    trie.insert(word, [codepoint])
+                if (existy(result)) {
+                    result.push(codepoint)
                 } else {
-                    existing.push(codepoint)
+                    trie.insert(word, [codepoint])
                 }
             })
         })
@@ -151,7 +167,7 @@
         removeAllChildNodes(resultsElem)
         var rows = _.map(results, toResultRow)
         rows.forEach(function(row) {
-            if (row != null)
+            if (existy(row))
                 resultsElem.appendChild(row)
         })
     }
@@ -164,7 +180,7 @@
     // Change a codepoint object into a HTMLTableRow element containing
     // information about it.
     function toResultRow(codepoint) {
-        if (codepoint == null)
+        if (!existy(codepoint))
             return null;
 
        var char_name = codepoint[0],
