@@ -140,7 +140,7 @@
     }
 
     function toCodepoint(arr) {
-        return { name: arr[0], hexcode: arr[1] }
+        return { hexcode: arr[0], name: arr[1] }
     }
 
     // Take a list of words, return a list of possible matches. Best first.
