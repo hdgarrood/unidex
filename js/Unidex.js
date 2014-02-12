@@ -93,28 +93,41 @@
     // **** INITIALISATION ****
     // This should be called to initialise the data. Pass as the argument a
     // string containing all the data, in a 2 column CSV format: codepoint
-    // (hex), English name.
-    Unidex.init = function init(string_data) {
+    // (hex), English name. Optionally pass a callback, to be fired after
+    // initialistation.
+    Unidex.init = function init(string_data, callback) {
         var trie = make_trie()
         Unidex.trie = trie
 
         string_data.split("\n").forEach(function(line) {
             if (line === "") return;
 
-            var codepoint = line.split(","),
-                codepointObj = toCodepoint(arr),
-                words = codepointObj.name.split(" ")
+            var codepointArr = line.split(","),
+                codepoint = toCodepoint(codepointArr),
+                words = codepoint.name.split(" ")
 
             words.forEach(function(word) {
                 var result = trie.retrieve(word)
 
                 if (existy(result)) {
-                    result.push(codepoint)
+                    result.push(codepointArr)
                 } else {
-                    trie.insert(word, [codepoint])
+                    trie.insert(word, [codepointArr])
                 }
             })
         })
+
+        if (existy(callback))
+            callback()
+    }
+
+    Unidex.init_from_path = function init_from_path(path, callback) {
+        var req = new XMLHttpRequest()
+
+        req.overrideMimeType('text/plain')
+        req.onload = function() { Unidex.init(this.responseText, callback) }
+        req.open('GET', 'data/ExtractedData.csv')
+        req.send()
     }
 
     // **** QUERYING ****
@@ -133,7 +146,8 @@
     // Take a list of words, return a list of possible matches. Best first.
     Unidex.query = function query(words) {
         var result_sets = _.map(words, function(word) {
-                return toCodepoint(Unidex.trie.retrieve(word.toUpperCase()))
+                return _.map(Unidex.trie.retrieve(word.toUpperCase()) || [],
+                    toCodepoint)
             }),
             best_results = intersection(result_sets)
 
