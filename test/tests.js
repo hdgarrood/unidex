@@ -1,8 +1,8 @@
 var test_data =
-    [ "2203,THERE EXISTS"
-    , "2204,THERE DOES NOT EXIST"
-    , "1F431,CAT FACE"
-    , "0000,<control>"
+    [ "2203\tTHERE EXISTS"
+    , "2204\tTHERE DOES NOT EXIST"
+    , "1F431\tCAT FACE"
+    , "0000\t<control>"
     ].join("\n")
 
 Unidex.init(test_data, function() {

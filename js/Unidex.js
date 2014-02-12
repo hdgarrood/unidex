@@ -103,7 +103,7 @@
         string_data.split("\n").forEach(function(line) {
             if (line === "") return;
 
-            var codepointArr = line.split(","),
+            var codepointArr = line.split("\t"),
                 codepoint = toCodepoint(codepointArr),
                 words = codepoint.name.split(" ")
 
