@@ -19,16 +19,11 @@
         <script src="js/Unidex.js"></script>
 
         <script type="text/javascript">
-            var req = new XMLHttpRequest()
-
-            req.overrideMimeType('text/plain')
-            req.onload = function() { Unidex.init(this.responseText) }
-            req.open('GET', 'data/ExtractedData.csv')
-            req.send()
-
-            Unidex.attach(
-                    document.getElementById('input'),
-                    document.getElementById('results'))
+            Unidex.init('data/ExtractedData.csv', function() {
+                Unidex.attach(
+                        document.getElementById('input'),
+                        document.getElementById('results'))
+            })
         </script>
     </body>
 </html>

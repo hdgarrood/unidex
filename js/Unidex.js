@@ -126,7 +126,7 @@
 
         req.overrideMimeType('text/plain')
         req.onload = function() { Unidex.init(this.responseText, callback) }
-        req.open('GET', 'data/ExtractedData.csv')
+        req.open('GET', path)
         req.send()
     }
 
