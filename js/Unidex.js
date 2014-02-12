@@ -179,6 +179,7 @@
     }
 
     // **** UI ****
+    Unidex.internal.displayResults = displayResults =
     function displayResults(resultsElem, results) {
         removeAllChildNodes(resultsElem)
         var rows = _.map(results, toResultRow)
