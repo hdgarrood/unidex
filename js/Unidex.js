@@ -108,12 +108,13 @@
                 words = codepoint.name.split(" ")
 
             words.forEach(function(word) {
-                var result = trie.retrieve(word)
+                upcaseWord = word.toUpperCase()
+                var result = trie.retrieve(upcaseWord)
 
                 if (existy(result)) {
                     result.push(codepointArr)
                 } else {
-                    trie.insert(word, [codepointArr])
+                    trie.insert(upcaseWord, [codepointArr])
                 }
             })
         })

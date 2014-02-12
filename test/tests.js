@@ -2,6 +2,7 @@ var test_data =
     [ "2203,THERE EXISTS"
     , "2204,THERE DOES NOT EXIST"
     , "1F431,CAT FACE"
+    , "0000,<control>"
     ].join("\n")
 
 Unidex.init(test_data, function() {
@@ -68,5 +69,12 @@ Unidex.init(test_data, function() {
 
         strictEqual(immediateChildren.length, results.length,
             'should have one result row for each result')
+    })
+
+    test('can search for chars with lowercase names', function() {
+        var results = Unidex.query(['<control>'])
+
+        ok(results.length >= 1, 'should have at least one result')
+        strictEqual(results[0].hexcode, '0000', 'first result should be NUL')
     })
 })
