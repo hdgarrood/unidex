@@ -10,20 +10,23 @@
     // **** DATA STRUCTURE ****
     // Creates a new trie.
     Unidex.internal.make_trie = make_trie = function make_trie() {
+        var valueKey = '_$'
+
         function setValue(obj, value) {
-            obj['_$'] = value
+            obj[valueKey] = value
         }
 
         function getValue(obj) {
-            return obj['_$']
+            return obj[valueKey]
+        }
+
+        function children(obj) {
+            return _.reject(_.keys(obj),
+                    function(key) { key === valueKey })
         }
 
         function hasValue(obj) {
             return existy(getValue(obj))
-        }
-
-        function isLeaf(obj) {
-            return _.keys(obj).length === 1
         }
 
         function obj_insert(obj, key, value) {
@@ -59,15 +62,17 @@
             }
         }
 
-        function obj_size(obj) {
-            var total = 0
-            _.keys(obj).forEach(function(key) {
-                if (hasValue(obj[key]))
-                    total += 1
+        function obj_traverse(obj, cb) {
+            var result = _.find(children(obj), function(key) {
+                if (hasValue(obj[key])) {
+                    if (cb(obj[key]) === false)
+                        return true // break
+                }
 
-                total += obj_size(obj[key])
+                obj_traverse(obj[key], cb)
             })
-            return total
+
+            return (existy(result) ? true : undefined)
         }
 
         return {
@@ -79,8 +84,20 @@
                 return obj_retrieve(this.data, key)
             },
 
+            // Iterate over the whole structure with a callback, calling
+            // the callback once for each value in the trie.
+            //
+            // If the callback returns false, stop traversing.
+            traverse: function(cb) {
+                obj_traverse(this.data, cb)
+            },
+
             size: function() {
-                return obj_size(this.data)
+                var total = 0;
+                this.traverse(function(val) {
+                    total += 1
+                })
+                return total
             },
 
             data: { },

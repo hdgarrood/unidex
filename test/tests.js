@@ -1,11 +1,12 @@
-var test_data =
+var testData =
     [ "2203\tTHERE EXISTS"
     , "2204\tTHERE DOES NOT EXIST"
     , "1F431\tCAT FACE"
     , "0000\t<control>"
-    ].join("\n")
+    ],
+    testDataString = testData.join("\n")
 
-Unidex.init(test_data, function() {
+Unidex.init(testDataString, function() {
     // tries
     test('trie insertion', function() {
         var trie = make_trie()
@@ -16,13 +17,39 @@ Unidex.init(test_data, function() {
         strictEqual(result, 5, 'correct value retrieved')
     })
 
-    test('trie counting', function() {
+    test('trie size', function() {
         var trie = make_trie()
         trie.insert('lol', 3)
         trie.insert('lols', 6)
         trie.insert('hello', 12)
 
         strictEqual(trie.size(), 3, 'trie reports correct size')
+    })
+
+    test('trie traversal can abort early', function() {
+        // Retrieves N values from the trie and then stops
+        var retrieve = function(opts) {
+            var max     = opts.max,
+                results = opts.into,
+                counter = 0
+            return function(val) {
+                counter++
+                if (counter === max)
+                    return false
+                results.push(val)
+            }
+        }
+        
+        var trie = make_trie()
+        trie.insert('lol', 3)
+        trie.insert('lols', 6)
+        trie.insert('hello', 12)
+
+        var results = []
+        trie.traverse(retrieve({max: 2, into: results}))
+
+        strictEqual(results.length, 2,
+            'traversal should abort early if callback returns true')
     })
 
     test('no trie clobbering forwards', function() {
