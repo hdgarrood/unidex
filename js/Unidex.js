@@ -7,10 +7,6 @@
         return x != null
     }
 
-    function truthy(x) {
-        return existy(x) && x
-    }
-
     // **** DATA STRUCTURE ****
     // Creates a new trie.
     Unidex.internal.make_trie = make_trie = function make_trie() {
