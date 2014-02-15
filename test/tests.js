@@ -6,10 +6,14 @@ var testData =
     ],
     testDataString = testData.join("\n")
 
+var makeTrie = Unidex.internal.makeTrie
+var toResultRow = Unidex.internal.toResultRow
+var displayResults = Unidex.internal.displayResults
+
 Unidex.init(testDataString, function() {
     // tries
     test('trie insertion', function() {
-        var trie = make_trie()
+        var trie = makeTrie()
         trie.insert('hello', 5)
 
         var result = trie.retrieve('hello')
@@ -18,7 +22,7 @@ Unidex.init(testDataString, function() {
     })
 
     test('trie size', function() {
-        var trie = make_trie()
+        var trie = makeTrie()
         trie.insert('lol', 3)
         trie.insert('lols', 6)
         trie.insert('hello', 12)
@@ -39,8 +43,8 @@ Unidex.init(testDataString, function() {
                 results.push(val)
             }
         }
-        
-        var trie = make_trie()
+
+        var trie = makeTrie()
         trie.insert('lol', 3)
         trie.insert('lols', 6)
         trie.insert('hello', 12)
@@ -53,7 +57,7 @@ Unidex.init(testDataString, function() {
     })
 
     test('no trie clobbering forwards', function() {
-        var trie = make_trie()
+        var trie = makeTrie()
         trie.insert('lol', 62)
         trie.insert('lols', 63)
 
@@ -62,7 +66,7 @@ Unidex.init(testDataString, function() {
     })
 
     test('no trie clobbering backwards', function() {
-        var trie = make_trie()
+        var trie = makeTrie()
         trie.insert('lols', 63)
         trie.insert('lol', 62)
 

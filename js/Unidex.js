@@ -1,4 +1,6 @@
 (function(global) {
+    "use strict";
+
     var Unidex = {}
     Unidex.internal = {}
     global.Unidex = Unidex
@@ -9,7 +11,7 @@
 
     // **** DATA STRUCTURE ****
     // Creates a new trie.
-    Unidex.internal.make_trie = make_trie = function make_trie() {
+    var makeTrie = Unidex.internal.makeTrie = function makeTrie() {
         var valueKey = '_$'
 
         function setValue(obj, value) {
@@ -110,7 +112,7 @@
     // (hex), English name. Optionally pass a callback, to be fired after
     // initialistation.
     Unidex.init = function init(string_data, callback) {
-        var trie = make_trie()
+        var trie = makeTrie()
         Unidex.internal.trie = trie
 
         string_data.split("\n").forEach(function(line) {
@@ -121,8 +123,8 @@
                 words = codepoint.name.split(" ")
 
             words.forEach(function(word) {
-                upcaseWord = word.toUpperCase()
-                var result = trie.retrieve(upcaseWord)
+                var upcaseWord = word.toUpperCase(),
+                    result = trie.retrieve(upcaseWord)
 
                 if (existy(result)) {
                     result.push(codepointArr)
@@ -183,17 +185,24 @@
         proportion_of_matched_words: {
             weight: 5,
             call: function(codepoint, words) {
+                var codepoint_words = codepoint.name.split(" "),
+                    matched_words = _.filter(words, function(w) {
+                        return _.contains(codepoint_words, w)
+                    })
+                return matched_words.length / codepoint_words.length
             }
         }
     }
 
     // Given one codepoint from a query, give it a score for how well it
     // matches the query. Used to determine order of results.
-    function rank(codepoint, query) {
+    function rank(codepoint, words) {
+        return ranking_mechanisms.proportion_of_matched_words
+            .call(codepoint, words)
     }
 
     // **** UI ****
-    Unidex.internal.displayResults = displayResults =
+    var displayResults = Unidex.internal.displayResults =
     function displayResults(resultsElem, results) {
         removeAllChildNodes(resultsElem)
         var rows = _.map(results, toResultRow)
@@ -210,7 +219,7 @@
 
     // Change a codepoint object into a HTMLTableRow element containing
     // information about it.
-    Unidex.internal.toResultRow = toResultRow =
+    var toResultRow = Unidex.internal.toResultRow =
     function toResultRow(codepoint) {
         if (!existy(codepoint))
             return null;
