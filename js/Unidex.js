@@ -23,8 +23,13 @@
         }
 
         function children(obj) {
-            return _.reject(_.keys(obj),
-                    function(key) { key === valueKey })
+            var allKeys = _.keys(obj),
+                index = allKeys.indexOf(valueKey)
+
+            if (index >= 0)
+                allKeys.splice(index, 1)
+
+            return allKeys
         }
 
         function hasValue(obj) {
